@@ -2,21 +2,31 @@ package client;
 
 import ocsf.client.AbstractClient;
 import java.io.IOException;
-import javafx.application.Platform; // <--- הוספתי את זה (חשוב לסגירה)
+import common.ActionType;
+import common.Message;
+import javafx.application.Platform;
 
 /**
- * This class overrides some of the methods defined in the abstract
- * superclass in order to give more functionality to the client.
+ * The ChatClient is responsible for handling communication between the client GUI and the server.
+ * <p>
+ * It extends {@link AbstractClient} and overrides methods to handle incoming messages
+ * and connection events. It routes messages to the appropriate GUI controller.
+ * </p>
  */
 public class ChatClient extends AbstractClient {
   
+    /** Static reference to the OrderFrameController to update the main UI. */
     public static OrderFrameController orderController;
+    
+    /** Static reference to the LoginFrameController to update the login UI. */
+    public static LoginFrameController loginController;
     
     /**
      * Constructs an instance of the chat client.
      *
      * @param host The server to connect to.
      * @param port The port number to connect on.
+     * @throws IOException if an I/O error occurs when opening the connection
      */
     public ChatClient(String host, int port) throws IOException {
         super(host, port); // Call the superclass constructor
@@ -24,21 +34,37 @@ public class ChatClient extends AbstractClient {
     }
 
     /**
-     * This method handles all data that comes in from the server.
+     * Handles incoming messages from the server.
+     * <p>
+     * Checks the {@link ActionType} of the message and forwards it to the
+     * relevant controller (Login or Order).
+     * </p>
      *
-     * @param msg The message from the server.
+     * @param msg The message received from the server.
      */
     @Override
     protected void handleMessageFromServer(Object msg) {
         System.out.println("Server says: " + msg);
         
-        if (orderController != null) {
-            orderController.updateFields(msg);
+        if (msg instanceof Message) {
+            Message message = (Message) msg;
+            
+            // Route message based on ActionType
+            if (message.getAction() == ActionType.LOGIN) {
+                if (loginController != null) {
+                    loginController.handleLoginResponse(message);
+                }
+            } else {
+                // Default handling for order-related actions
+                if (orderController != null) {
+                    orderController.updateFields(message);
+                }
+            }
         }
     }
   
     /**
-     * This method handles all data coming from the UI (User Interface).
+     * Handles messages coming from the UI to be sent to the server.
      *
      * @param message The message from the UI.
      */
@@ -52,7 +78,7 @@ public class ChatClient extends AbstractClient {
     }
   
     /**
-     * This method terminates the client.
+     * Terminates the client connection and exits the application.
      */
     public void quit() {
         try {
@@ -61,18 +87,23 @@ public class ChatClient extends AbstractClient {
         System.exit(0);
     }
 
-
+    /**
+     * Called when the connection to the server is closed.
+     */
     @Override
     protected void connectionClosed() {
         System.out.println("Server connection closed. Exiting...");
         Platform.runLater(() -> System.exit(0));
     }
 
+    /**
+     * Called when a connection exception occurs.
+     *
+     * @param exception the exception that occurred
+     */
     @Override
     protected void connectionException(Exception exception) {
         System.out.println("Server connection exception. Exiting...");
         Platform.runLater(() -> System.exit(0));
     }
-
 }
-

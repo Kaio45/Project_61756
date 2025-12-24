@@ -32,7 +32,7 @@ public class mysqlConnection {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             System.out.println("Connecting to database...");
 
-            // Ensure the schema name (order_sch) matches your database configuration
+            // Ensure the schema name matches your database configuration
             String url = "jdbc:mysql://127.0.0.1:3306/order_sch?serverTimezone=Asia/Jerusalem&useSSL=false&allowPublicKeyRetrieval=true";
             conn = DriverManager.getConnection(url, "root", "abc123");
 
@@ -162,10 +162,10 @@ public class mysqlConnection {
     }
     
     /**
-     * Authenticates a user against the database.
+     * Authenticates a user against the database and updates their login status.
      * <p>
      * Checks if a user exists with the provided username and password.
-     * If found, returns a User object populated with the data from the DB.
+     * If found, it updates the 'is_logged_in' field to 1 in the database.
      * </p>
      *
      * @param username the username entered by the client
@@ -175,15 +175,15 @@ public class mysqlConnection {
     public static User loginUser(String username, String password) {
         User user = null;
         try {
-            // Query to find the user matching the username and password
-            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-            PreparedStatement ps = conn.prepareStatement(query);
+            // 1. Check if user exists
+            String selectQuery = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement ps = conn.prepareStatement(selectQuery);
             ps.setString(1, username);
             ps.setString(2, password);
             
             ResultSet rs = ps.executeQuery();
             
-            // If user exists, create the User object
+            // If user exists
             if (rs.next()) {
                 user = new User(
                     rs.getInt("id"),
@@ -193,7 +193,27 @@ public class mysqlConnection {
                     rs.getString("first_name"),
                     rs.getString("last_name")
                 );
-                user.setLoggedIn(true);
+
+                // Check the ORIGINAL status from the database
+                int currentDbStatus = rs.getInt("is_logged_in");
+
+                if (currentDbStatus == 1) {
+                    // User is ALREADY connected in the DB -> Set object to true so Server throws error
+                    user.setLoggedIn(true);
+                } else {
+                    // User is NOT connected (Status 0)
+                    
+                    // A. Set object to false so Server allows the login process to complete
+                    user.setLoggedIn(false); 
+
+                    // B. Update the DB to 1 (So next time it will be locked)
+                    String updateQuery = "UPDATE users SET is_logged_in = 1 WHERE id = ?";
+                    PreparedStatement updatePs = conn.prepareStatement(updateQuery);
+                    updatePs.setInt(1, rs.getInt("id"));
+                    updatePs.executeUpdate();
+                    
+                    System.out.println("User " + username + " login approved and DB updated.");
+                }
             }
             rs.close();
         } catch (SQLException e) {

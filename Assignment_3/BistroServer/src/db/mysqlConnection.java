@@ -6,11 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import common.Order;
+import common.User; 
 
 /**
  * The Class mysqlConnection.
+ * <p>
  * Handles the connection to the MySQL database and provides methods
- * for querying, inserting, and updating order data.
+ * for querying, inserting, and updating data (Orders and Users).
+ * </p>
  */
 public class mysqlConnection {
 
@@ -19,8 +22,10 @@ public class mysqlConnection {
 
     /**
      * Connects to the database.
+     * <p>
      * Loads the MySQL JDBC driver and establishes a connection using the defined URL,
      * username, and password.
+     * </p>
      */
     public static void connectToDB() {
         try {
@@ -78,7 +83,7 @@ public class mysqlConnection {
     /**
      * Save order to DB.
      * Generates a new ID based on the current maximum and inserts the order details 
-     * into the 'orders' table.r
+     * into the 'orders' table.
      *
      * @param order the order object to save
      */
@@ -154,6 +159,48 @@ public class mysqlConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Authenticates a user against the database.
+     * <p>
+     * Checks if a user exists with the provided username and password.
+     * If found, returns a User object populated with the data from the DB.
+     * </p>
+     *
+     * @param username the username entered by the client
+     * @param password the password entered by the client
+     * @return a {@link User} object if authentication succeeds, or null if failed
+     */
+    public static User loginUser(String username, String password) {
+        User user = null;
+        try {
+            // Query to find the user matching the username and password
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            // If user exists, create the User object
+            if (rs.next()) {
+                user = new User(
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("user_type"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name")
+                );
+                user.setLoggedIn(true);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error during login query: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return user;
     }
 
     /**

@@ -6,6 +6,7 @@ import ocsf.server.ConnectionToClient;
 import common.Order;
 import common.Message;
 import common.ActionType;
+import common.User; // <--- Added import for User entity
 
 /**
  * The Class EchoServer.
@@ -40,7 +41,7 @@ public class EchoServer extends AbstractServer {
      * This method is triggered whenever a message is received from a connected client.
      * It expects the message to be of type {@link Message}. Based on the {@link ActionType}
      * contained in the message, it delegates the request to the appropriate handler
-     * (e.g., fetching an order, adding an order, or updating an order).
+     * (e.g., fetching an order, adding an order, updating an order, or logging in).
      * </p>
      *
      * @param msg    the message received from the client (expected to be a {@link Message} object)
@@ -57,6 +58,33 @@ public class EchoServer extends AbstractServer {
             // Switch based on the action type requested by the client
             switch (receivedMsg.getAction()) {
             
+                case LOGIN:
+                    // Scenario: Client attempts to log in
+                    if (receivedMsg.getContent() instanceof User) {
+                        User loginRequest = (User) receivedMsg.getContent();
+                        
+                        // Check credentials against the database using mysqlConnection
+                        User fullUser = mysqlConnection.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
+                        
+                        try {
+                            if (fullUser != null) {
+                                if (fullUser.isLoggedIn()) {
+                                     // User exists but is already marked as logged in
+                                     client.sendToClient(new Message(ActionType.LOGIN, "Already Logged In"));
+                                } else {
+                                     // Login successful: send the full User object back
+                                     client.sendToClient(new Message(ActionType.LOGIN, fullUser));
+                                }
+                            } else {
+                                // User not found or wrong password
+                                client.sendToClient(new Message(ActionType.LOGIN, "Wrong username or password"));
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+
                 case GET_ORDER:
                     // Scenario: Client requests to search for an order by ID
                     if (receivedMsg.getContent() instanceof String) {

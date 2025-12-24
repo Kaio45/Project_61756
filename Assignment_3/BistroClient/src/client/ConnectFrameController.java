@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  * <p>
  * This class handles the initial connection logic where the user inputs
  * the Server IP and Port. It validates the input, establishes the connection,
- * and then transitions to the main application window (OrderFrame).
+ * and then transitions to the Login window.
  * </p>
  */
 public class ConnectFrameController {
@@ -46,7 +46,7 @@ public class ConnectFrameController {
      * <p>
      * Reads the IP and Port from the text fields, validates them, and attempts
      * to create a new instance of {@link ChatClient}. If successful, it hides
-     * the connection window and opens the main application window.
+     * the connection window and opens the Login window.
      * </p>
      *
      * @param event the action event triggered by the Connect button
@@ -70,8 +70,8 @@ public class ConnectFrameController {
             // If we reached here, connection was successful. Hide the connect frame.
             ((Node)event.getSource()).getScene().getWindow().hide(); 
             
-            // Load and show the main OrderFrame
-            loadOrderFrame();
+            // Load and show the Login Frame (Correction: Go to Login, not Order directly)
+            loadLoginFrame();
             
         } catch (NumberFormatException e) {
             errorLabel.setText("Port must be a number");
@@ -82,30 +82,43 @@ public class ConnectFrameController {
     }
     
     /**
-     * Loads and displays the main Order Management Frame.
+     * Loads and displays the Login Frame.
      * <p>
      * This method is called only after a successful connection to the server.
-     * It initializes the OrderFrameController and links it with the ChatClient.
+     * It initializes the LoginFrameController and links it with the ChatClient static reference.
      * </p>
      *
      * @throws Exception if the FXML file cannot be loaded
      */
-    private void loadOrderFrame() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/OrderFrame.fxml"));
+    private void loadLoginFrame() throws Exception {
+        // Updated path to load LoginFrame instead of OrderFrame
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/LoginFrame.fxml"));
         Parent root = loader.load();
         
-        // Get the controller of the main frame and link it with the client
-        OrderFrameController controller = loader.getController();
-        controller.setClient(ClientUI.chat);
+        // Get the controller of the login frame
+        LoginFrameController controller = loader.getController();
         
-        // Update the static reference in ChatClient so it can send messages to this controller
-        ChatClient.orderController = controller; 
+        // Update the static reference in ChatClient so it can handle login responses
+        ChatClient.loginController = controller; 
         
         Stage primaryStage = new Stage();
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Restaurant Order Management");
+        primaryStage.setTitle("Bistro - Login");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // Handle window close request to ensure clean disconnection
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("Closing login window...");
+            if (ClientUI.chat != null) {
+                try {
+                    ClientUI.chat.quit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            System.exit(0);
+        });
     }
 
     /**

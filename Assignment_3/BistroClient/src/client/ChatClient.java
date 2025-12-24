@@ -47,6 +47,7 @@ public class ChatClient extends AbstractClient {
             sendToServer(message);
         } catch (IOException e) {
             System.out.println("Could not send message to server. Terminating client.");
+          System.out.println("123");
             quit();
         }
     }
@@ -73,4 +74,5 @@ public class ChatClient extends AbstractClient {
         System.out.println("Server connection exception. Exiting...");
         Platform.runLater(() -> System.exit(0));
     }
+
 }

@@ -8,14 +8,18 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * The main entry point for the Client side of the Restaurant Order Management system.
- * This class extends the JavaFX Application class to launch the GUI and establishes
- * the initial connection to the server.
+ * The main entry point for the Client side of the Bistro Restaurant System.
+ * This class extends the JavaFX Application class to launch the GUI.
+ * <p>
+ * Instead of connecting immediately, it loads a connection frame (ConnectFrame)
+ * where the user can input the server IP and Port.
+ * </p>
  */
 public class ClientUI extends Application {
 
-    /** * The static instance of the ChatClient used to communicate with the server. 
-     * It is static to allow access from various parts of the client application.
+    /**
+     * The static instance of the ChatClient used to communicate with the server.
+     * It is initialized only after the user clicks "Connect" in the ConnectFrame.
      */
     public static ChatClient chat; 
 
@@ -30,46 +34,31 @@ public class ClientUI extends Application {
 
     /**
      * The main entry point for JavaFX applications.
-     * This method establishes the connection to the server, loads the main GUI frame (OrderFrame),
-     * initializes the controller, and displays the primary stage.
+     * <p>
+     * This method loads the initial Connection Frame (ConnectFrame.fxml).
+     * It allows the user to define connection parameters before the main application starts.
+     * </p>
      *
-     * @param primaryStage the primary stage for this application, onto which the application scene can be set
-     * @throws Exception if an error occurs during FXML loading or server connection
+     * @param primaryStage the primary stage for this application
+     * @throws Exception if an error occurs during FXML loading
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            // Establishes connection to the specific IP and Port
-            chat = new ChatClient("10.121.237.14", 5555);
+            // Load the FXML for the Connection Screen
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/ConnectFrame.fxml"));
+            Parent root = loader.load();
+            
+            // Set up the stage and scene
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Bistro System - Connection");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            
         } catch (Exception e) {
-            System.out.println("Can't connect to server");
+            // Handle FXML loading errors
+            System.out.println("ERROR: Could not load ConnectFrame.fxml");
+            e.printStackTrace();
         }
-        
-        // Loads the FXML layout
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/OrderFrame.fxml"));
-        Parent root = loader.load();
-        
-        // Retrieves the controller and links it with the client instance
-        OrderFrameController controller = loader.getController();
-        controller.setClient(chat);
-        
-        // Saves the controller reference in ChatClient for receiving updates
-        ChatClient.orderController = controller; 
-        primaryStage.setOnCloseRequest(event -> {
-            System.out.println("Closing client...");
-            if (chat != null) {
-                try {
-                    chat.closeConnection(); 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.exit(0);
-        });
-        // Sets up the scene and displays the stage
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("Restaurant Order Management");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }

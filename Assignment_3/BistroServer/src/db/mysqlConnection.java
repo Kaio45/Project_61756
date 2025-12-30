@@ -290,7 +290,36 @@ public class mysqlConnection {
             e.printStackTrace();
         }
     }
-
+    public static ArrayList<Order> getActiveOrders(String date, String time) {
+        ArrayList<Order> orders = new ArrayList<>();
+        // We fetch active orders to check overlap
+        String query = "SELECT * FROM `orders` WHERE order_date = ? AND status = 'ACTIVE'";
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, date);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Order o = new Order(
+                    rs.getInt("order_number"), 
+                    rs.getString("order_date"),
+                    rs.getString("order_time"),
+                    rs.getInt("number_of_guests"),
+                    rs.getInt("confirmation_code"), 
+                    rs.getInt("subscriber_id"),
+                    rs.getString("date_of_placing_order"),
+                    rs.getString("status"),
+                    rs.getInt("table_id")
+                );
+                orders.add(o);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
     /**
      * The main method.
      * Useful for testing the database connection independently.
@@ -301,3 +330,4 @@ public class mysqlConnection {
         connectToDB();
     }
 }
+

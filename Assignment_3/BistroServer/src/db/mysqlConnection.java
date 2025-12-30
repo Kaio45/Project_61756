@@ -5,14 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList; // Added for getAllTables
 import common.Order;
+import common.Table;    // Added for Assignment 3
 import common.User; 
 
 /**
  * The Class mysqlConnection.
  * <p>
  * Handles the connection to the MySQL database and provides methods
- * for querying, inserting, and updating data (Orders and Users).
+ * for querying, inserting, and updating data (Orders, Users, and Tables).
  * </p>
  */
 public class mysqlConnection {
@@ -32,9 +34,10 @@ public class mysqlConnection {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             System.out.println("Connecting to database...");
 
-            // Ensure the schema name matches your database configuration
+            // BASED ON YOUR CODE: DB name is 'order_sch'.
+            // WARNING: If your MySQL Workbench shows 'order', please change 'order_sch' to 'order' below.
             String url = "jdbc:mysql://127.0.0.1:3306/order_sch?serverTimezone=Asia/Jerusalem&useSSL=false&allowPublicKeyRetrieval=true";
-            conn = DriverManager.getConnection(url, "root", "abc123");
+            conn = DriverManager.getConnection(url, "root", "abc123"); // Update password if needed
 
             System.out.println("SQL connection succeed");
 
@@ -82,19 +85,24 @@ public class mysqlConnection {
 
     /**
      * Save order to DB.
-     * Generates a new ID based on the current maximum and inserts the order details 
-     * into the 'orders' table.
+     * UPDATED: Now saves 'status', 'order_time', and 'table_id' required for Assignment 3.
      *
      * @param order the order object to save
      */
     public static void saveOrderToDB(Order order) {
 
-        int nextId = getMaxOrderNumber() + 1;
-        order.set_order_number(nextId);
+        if (order.get_order_number() == 0) {
+            int nextId = getMaxOrderNumber() + 1;
+            order.set_order_number(nextId);
+        }
+        
+        // Default status for safety
+        if (order.get_status() == null) order.set_status("ACTIVE");
 
-        System.out.println("Generated new Order ID: " + nextId);
+        System.out.println("Generated new Order ID: " + order.get_order_number());
 
-        String query = "INSERT INTO `orders` (order_number, order_date, number_of_guests, confirmation_code, subscriber_id, date_of_placing_order) VALUES (?, ?, ?, ?, ?, ?)";
+        // We added the new fields here: order_time, status, table_id
+        String query = "INSERT INTO `orders` (order_number, order_date, number_of_guests, confirmation_code, subscriber_id, date_of_placing_order, order_time, status, table_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(query);
 
@@ -104,6 +112,13 @@ public class mysqlConnection {
             ps.setInt(4, order.get_confirmation_code());
             ps.setInt(5, order.get_subscriber_id());
             ps.setString(6, order.get_date_of_placing_order());
+            
+            // New fields for Assignment 3
+            ps.setString(7, order.get_order_time());
+            ps.setString(8, order.get_status());
+            
+            if (order.get_table_id() > 0) ps.setInt(9, order.get_table_id());
+            else ps.setNull(9, java.sql.Types.INTEGER);
 
             ps.executeUpdate();
             System.out.println("Order saved successfully to DB!");
@@ -116,6 +131,7 @@ public class mysqlConnection {
 
     /**
      * Gets an order by its ID.
+     * UPDATED: Retrieves the new fields from the DB.
      *
      * @param orderId the ID of the order to retrieve
      * @return the Order object if found, null otherwise
@@ -129,9 +145,18 @@ public class mysqlConnection {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                order = new Order(rs.getInt("order_number"), rs.getString("order_date"), rs.getInt("number_of_guests"),
-                        rs.getInt("confirmation_code"), rs.getInt("subscriber_id"),
-                        rs.getString("date_of_placing_order"));
+                // Using the full constructor (Make sure Order.java is updated!)
+                order = new Order(
+                    rs.getInt("order_number"), 
+                    rs.getString("order_date"), 
+                    rs.getString("order_time"), // new
+                    rs.getInt("number_of_guests"),
+                    rs.getInt("confirmation_code"), 
+                    rs.getInt("subscriber_id"),
+                    rs.getString("date_of_placing_order"),
+                    rs.getString("status"),     // new
+                    rs.getInt("table_id")       // new
+                );
             }
             rs.close();
         } catch (SQLException e) {
@@ -142,23 +167,52 @@ public class mysqlConnection {
 
     /**
      * Updates an existing order in the database.
-     * Specifically updates the order date and the number of guests.
+     * UPDATED: Updates status and table allocation as well.
      *
      * @param order the order object containing updated information
      */
     public static void updateOrder(Order order) {
-        String query = "UPDATE `orders` SET order_date = ?, number_of_guests = ? WHERE order_number = ?";
+        String query = "UPDATE `orders` SET order_date = ?, number_of_guests = ?, status = ?, table_id = ? WHERE order_number = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, order.get_order_date());
             ps.setInt(2, order.get_number_of_guests());
-            ps.setInt(3, order.get_order_number());
+            
+            // New fields update
+            ps.setString(3, order.get_status());
+            if (order.get_table_id() > 0) ps.setInt(4, order.get_table_id());
+            else ps.setNull(4, java.sql.Types.INTEGER);
+            
+            ps.setInt(5, order.get_order_number());
 
             ps.executeUpdate();
             System.out.println("Order updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    // --- NEW METHOD NEEDED FOR ASSIGNMENT 3 ---
+    
+    /**
+     * Retrieves all physical tables from the database.
+     * Required for server logic to assign tables.
+     * @return an ArrayList of Table objects
+     */
+    public static ArrayList<Table> getAllTables() {
+        ArrayList<Table> tables = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM restaurant_tables";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                tables.add(new Table(rs.getInt("table_id"), rs.getInt("seats")));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tables;
     }
     
     /**
@@ -221,6 +275,20 @@ public class mysqlConnection {
             e.printStackTrace();
         }
         return user;
+    }
+    
+    /**
+     * Updates the user's logged_in status to 0 (offline) in the database.
+     */
+    public static void updateUserLogout(String username) {
+        String query = "UPDATE users SET is_logged_in = 0 WHERE username = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

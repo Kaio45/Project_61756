@@ -14,6 +14,6 @@ public enum ActionType {
     ADD_ORDER,
     UPDATE_ORDER,
     
-    // System Actions
-    CONNECTION_TEST
+    GET_ALL_TABLES,       // Client requests the list of all tables
+    CHECK_AVAILABILITY    // Optional: Explicit check for availability
 }

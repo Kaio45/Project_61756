@@ -3,7 +3,9 @@ package client;
 import java.io.IOException;
 import common.ActionType;
 import common.Message;
+import common.Subscriber;
 import common.User;
+import common.Order;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,147 +14,235 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
- * Controller class for the Login Screen.
- * <p>
- * This class handles the user authentication process. It captures the username
- * and password input, sends a login request to the server, and processes
- * the server's response.
- * </p>
+ * Controller for the Login screen.
+ * Handles authentication for Staff, Subscribers, Casual diners, and access by Confirmation Code.
+ * @author Group-17
+ * @version 1.0
  */
 public class LoginFrameController {
 
-    /** The text field for the username input. */
-    @FXML
-    private TextField userTxt;
+    @FXML private TextField userTxt;
+    @FXML private PasswordField passTxt; 
+    @FXML private Label errorLabelStaff;
 
-    /** The text field for the password input. */
-    @FXML
-    private TextField passTxt;
+    @FXML private TextField subIdTxt;
+    @FXML private Label errorLabelSub;
 
-    /** The button to trigger the login action. */
-    @FXML
-    private Button loginBtn;
+    @FXML private TextField casualNameTxt;
+    @FXML private TextField casualPhoneTxt;
+    @FXML private TextField casualEmailTxt; 
+    @FXML private Label errorLabelCasual;
 
-    /** The button to exit the application. */
-    @FXML
-    private Button exitBtn;
-
-    /** The label to display error messages or status updates. */
-    @FXML
-    private Label errorLabel;
+    @FXML private Button exitBtn;
+    
+    @FXML private TextField codeLoginTxt;  
+    @FXML private Label errorCodeLbl;
+    @FXML private TextField subUsernameTxt;
+    private Subscriber currentAuthSubscriber; 
 
     /**
-     * Handles the login button click event.
-     * <p>
-     * Validates that the fields are not empty, creates a {@link User} object
-     * with the credentials, wraps it in a {@link Message} of type LOGIN,
-     * and sends it to the server.
-     * </p>
-     *
-     * @param event the action event triggered by the login button
+     * Handles staff login requests.
+     * @param event the button click event
      */
     @FXML
-    public void login(ActionEvent event) {
+    public void loginStaff(ActionEvent event) {
         String username = userTxt.getText();
         String password = passTxt.getText();
-
         if (username.isEmpty() || password.isEmpty()) {
-            errorLabel.setText("Please enter all fields");
+            errorLabelStaff.setText("Please enter all fields");
             return;
         }
-
-        // Create a temporary User object for the login request
         User user = new User(0, username, password, null, null, null);
-        
-        // Wrap the User object in a Message protocol
-        Message msg = new Message(ActionType.LOGIN, user);
-        
-        try {
-            ClientUI.chat.sendToServer(msg);
-            errorLabel.setText("Authenticating...");
-        } catch (IOException e) {
-            errorLabel.setText("Connection Error");
-            e.printStackTrace();
-        }
+        sendToServer(new Message(ActionType.LOGIN, user), errorLabelStaff, "Authenticating...");
     }
 
     /**
-     * Handles the exit button click event.
-     * Terminates the application.
-     *
-     * @param event the action event triggered by the exit button
+     * Handles subscriber login requests.
+     * @param event the button click event
      */
     @FXML
-    public void getExitBtn(ActionEvent event) {
-        System.exit(0);
+    public void loginSubscriber(ActionEvent event) {
+        String idStr = subIdTxt.getText();
+        String username = subUsernameTxt.getText();
+
+        if (idStr.isEmpty() || username.isEmpty()) { 
+            errorLabelSub.setText("Please enter Username AND ID"); 
+            return; 
+        }
+        
+        try {
+            int id = Integer.parseInt(idStr);
+            // Create a temporary subscriber object for the request
+            Subscriber reqSub = new Subscriber(id, "", "", "", "", "", 0);
+            reqSub.setUsername(username); 
+            
+            sendToServer(new Message(ActionType.IDENTIFY_SUBSCRIBER, reqSub), errorLabelSub, "Verifying...");
+        } catch (NumberFormatException e) { errorLabelSub.setText("ID must be numbers only"); }
+    }
+
+    /**
+     * Opens the 'Forgot ID' window.
+     * @param event the button click event
+     */
+    @FXML
+    public void openForgotId(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/ForgotIdFrame.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Recover ID");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    /**
+     * Handles login for casual clients (Guests).
+     * @param event the button click event
+     */
+    @FXML
+    public void loginCasual(ActionEvent event) {
+        String name = casualNameTxt.getText();
+        String phone = casualPhoneTxt.getText();
+        String email = casualEmailTxt.getText();
+        
+        // Check 1: Full name is mandatory
+        if (name.isEmpty()) {
+            showAlert("Login Error", "Please enter Full Name.");
+            return; 
+        }
+
+        // Check 2: At least one contact method is required
+        if (phone.isEmpty() && email.isEmpty()) {
+            showAlert("Login Error", "Please enter Phone Number OR Email address.");
+            return; 
+        }
+        
+        // Login valid
+        System.out.println("Guest Login: " + name);
+        openOrderFrame("Guest", name, phone, email);
+    }
+
+    /**
+     * Helper method to show alerts.
+     * @param title the alert title
+     * @param content the alert content
+     */
+    private void showAlert(String title, String content) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
     
     /**
-     * Processes the login response received from the server.
-     * <p>
-     * This method is called by {@link ChatClient} when a message arrives.
-     * It runs on the JavaFX Application Thread to update the UI safely.
-     * </p>
-     *
-     * @param msg the message received from the server
+     * Handles login using an order confirmation code.
+     * @param event the button click event
      */
-    public void handleLoginResponse(Object msg) {
+    @FXML
+    public void loginByCode(ActionEvent event) {
+        String codeStr = codeLoginTxt.getText();
+        if (codeStr.isEmpty()) return;
+        try {
+            sendToServer(new Message(ActionType.IDENTIFY_BY_CODE, Integer.parseInt(codeStr)), errorCodeLbl, "Searching...");
+        } catch (NumberFormatException e) { errorCodeLbl.setText("Code must be numbers only"); }
+    }
+    
+    private void sendToServer(Message msg, Label errorLbl, String statusText) {
+        try {
+            if (ClientUI.chat != null) {
+                ClientUI.chat.sendToServer(msg);
+                errorLbl.setText(statusText);
+            } else { errorLbl.setText("No connection"); }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    @FXML public void getExitBtn(ActionEvent event) { System.exit(0); }
+    
+    /**
+     * Handles responses from the server regarding login attempts.
+     * @param msg the message received from server
+     */
+    public void handleResponse(Object msg) {
         Platform.runLater(() -> {
             if (msg instanceof Message) {
                 Message receivedMsg = (Message) msg;
                 
+                // --- Staff/Manager Login ---
                 if (receivedMsg.getAction() == ActionType.LOGIN) {
                     if (receivedMsg.getContent() instanceof User) {
-                        // Login successful
                         User loggedInUser = (User) receivedMsg.getContent();
-                        System.out.println("User Logged In: " + loggedInUser.getUsername());
                         
-                        // Transition to the main application screen
-                        openOrderFrame();
+                        String realRole = loggedInUser.getUserType(); 
+                        String realName = loggedInUser.getFirstName() + " " + loggedInUser.getLastName();
                         
-                    } else if (receivedMsg.getContent() instanceof String) {
-                        // Login failed (display error message from server)
-                        errorLabel.setText((String) receivedMsg.getContent());
+                        openOrderFrame(realRole, realName, "", ""); 
+                        
+                    } else { 
+                        errorLabelStaff.setText((String) receivedMsg.getContent()); 
                     }
+                }
+                // --- Subscriber Identification ---
+                else if (receivedMsg.getAction() == ActionType.IDENTIFY_SUBSCRIBER) {
+                    if (receivedMsg.getContent() instanceof Subscriber) {
+                        Subscriber sub = (Subscriber) receivedMsg.getContent();
+                        this.currentAuthSubscriber = sub;
+                        openOrderFrame("Subscriber", sub.getFirstName(), sub.getPhone(), sub.getEmail());
+                    } else { errorLabelSub.setText("Subscriber not found"); }
+                }
+                // --- Identification by Code ---
+                else if (receivedMsg.getAction() == ActionType.IDENTIFY_BY_CODE) {
+                    if (receivedMsg.getContent() instanceof Order) {
+                        openOrderFrameForGuestOrder((Order) receivedMsg.getContent());
+                    } else { errorCodeLbl.setText("Order not found"); }
                 }
             }
         });
     }
-
-    /**
-     * Closes the login window and opens the main Order Management Frame.
-     * <p>
-     * This method is called only after a successful login.
-     * </p>
-     */
-    private void openOrderFrame() {
+    
+    private void openOrderFrame(String userType, String name, String phone, String email) {
         try {
-            // Close the current login window
-            Stage currentStage = (Stage) loginBtn.getScene().getWindow();
-            currentStage.close();
-            
-            // Load the main OrderFrame FXML
+            ((Stage) exitBtn.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/OrderFrame.fxml"));
             Parent root = loader.load();
-            
-            // Link the OrderFrameController with the ChatClient
             OrderFrameController controller = loader.getController();
             controller.setClient(ClientUI.chat);
-            ChatClient.orderController = controller; // Update the static reference
+            ChatClient.orderController = controller; 
             
-            // Show the main window
-            Stage primaryStage = new Stage();
-            Scene scene = new Scene(root);
-            primaryStage.setTitle("Bistro Main Menu");
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            int userId = 0;
+            if (userType.equals("Subscriber")) {
+                 try { userId = Integer.parseInt(subIdTxt.getText()); } catch(Exception e){}
+            }
             
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            controller.initPermissions(userType, userId, name, phone, email); 
+            
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+    
+    private void openOrderFrameForGuestOrder(Order order) {
+        try {
+            ((Stage) exitBtn.getScene().getWindow()).close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/OrderFrame.fxml"));
+            Parent root = loader.load();
+            OrderFrameController controller = loader.getController();
+            controller.setClient(ClientUI.chat);
+            ChatClient.orderController = controller; 
+            
+            controller.initPermissions("GuestView", order.get_subscriber_id(), "", order.getPhone(), order.getEmail());
+            controller.updateFields(new Message(ActionType.GET_ORDER, order));
+            
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) { e.printStackTrace(); }
     }
 }

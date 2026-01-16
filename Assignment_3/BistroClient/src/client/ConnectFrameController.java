@@ -13,41 +13,23 @@ import javafx.stage.Stage;
 
 /**
  * Controller class for the Connection Frame GUI.
- * <p>
- * This class handles the initial connection logic where the user inputs
- * the Server IP and Port. It validates the input, establishes the connection,
- * and then transitions to the Login window.
- * </p>
+ * Handles the initial connection logic where the user inputs the Server IP and Port.
+ * It validates the input, establishes the connection, and then transitions to the Login window.
+ * @author Group-17
+ * @version 1.0
  */
 public class ConnectFrameController {
 
-    /** The text field for entering the server IP address. */
-    @FXML
-    private TextField ipTxt;
-
-    /** The text field for entering the server port number. */
-    @FXML
-    private TextField portTxt;
-
-    /** The button to initiate the connection attempt. */
-    @FXML
-    private Button connectBtn;
-
-    /** The button to exit the application. */
-    @FXML
-    private Button exitBtn;
-
-    /** The label for displaying error messages to the user (e.g., connection failed). */
-    @FXML
-    private Label errorLabel;
+    @FXML private TextField ipTxt;
+    @FXML private TextField portTxt;
+    @FXML private Button connectBtn;
+    @FXML private Button exitBtn;
+    @FXML private Label errorLabel;
 
     /**
      * Handles the "Connect" button click event.
-     * <p>
      * Reads the IP and Port from the text fields, validates them, and attempts
-     * to create a new instance of {@link ChatClient}. If successful, it hides
-     * the connection window and opens the Login window.
-     * </p>
+     * to create a new instance of ChatClient.
      *
      * @param event the action event triggered by the Connect button
      */
@@ -70,7 +52,7 @@ public class ConnectFrameController {
             // If we reached here, connection was successful. Hide the connect frame.
             ((Node)event.getSource()).getScene().getWindow().hide(); 
             
-            // Load and show the Login Frame (Correction: Go to Login, not Order directly)
+            // Load and show the Login Frame
             loadLoginFrame();
             
         } catch (NumberFormatException e) {
@@ -83,15 +65,11 @@ public class ConnectFrameController {
     
     /**
      * Loads and displays the Login Frame.
-     * <p>
-     * This method is called only after a successful connection to the server.
-     * It initializes the LoginFrameController and links it with the ChatClient static reference.
-     * </p>
+     * Called only after a successful connection to the server.
      *
      * @throws Exception if the FXML file cannot be loaded
      */
     private void loadLoginFrame() throws Exception {
-        // Updated path to load LoginFrame instead of OrderFrame
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/LoginFrame.fxml"));
         Parent root = loader.load();
         

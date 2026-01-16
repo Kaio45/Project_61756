@@ -7,24 +7,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 /**
- * The Class ServerPortFrameController.
- * Controls the server GUI window, displaying logs and providing an exit mechanism.
+ * Controller class for the Server's GUI window (ServerPortFrame).
+ * Handles user interactions such as clicking the exit button and updates
+ * the log area with messages from the server.
+ * * @author Group-17
+ * @version 1.0
  */
 public class ServerPortFrameController {
 
-    /** The text area for displaying server logs. */
+    /** The text area component for displaying server logs. */
     @FXML
     private TextArea logTextArea;
 
-    /** The exit button. */
+    /** The button component used to exit the server application. */
     @FXML
     private Button exitBtn;
 
     /**
-     * Handles the exit button action.
-     * Stops the server and terminates the application when the button is clicked.
+     * Handles the 'Exit' button click event.
+     * Prints a termination message to the console and shuts down the application.
      *
-     * @param event the action event triggered by clicking the button
+     * @param event the ActionEvent triggered by the button click
      */
     public void getExitBtn(ActionEvent event) {
         System.out.println("Stopping Server...");
@@ -32,11 +35,11 @@ public class ServerPortFrameController {
     }
 
     /**
-     * Adds a message to the server log area.
-     * This method ensures the UI update is performed on the JavaFX Application Thread
-     * to prevent threading exceptions.
+     * Appends a new message to the server log display.
+     * Uses Platform.runLater to ensure that UI updates are performed safely
+     * on the JavaFX Application Thread.
      *
-     * @param msg the message string to append to the log
+     * @param msg the message string to add to the log
      */
     public void addToLog(String msg) {
         Platform.runLater(() -> {

@@ -3,48 +3,46 @@ package common;
 import java.io.Serializable;
 
 /**
- * Represents a User entity in the Bistro application.
- * <p>
- * This class contains user details such as username, password, permissions,
- * and name. It implements {@link Serializable} to allow objects of this class
- * to be sent over the network between the Client and the Server.
- * </p>
+ * Represents a User entity (Staff/Manager) in the Bistro application.
+ * Contains user credentials and role information.
+ * Implements Serializable for network transmission.
+ * @author Group-17
+ * @version 1.0
  */
 public class User implements Serializable {
     
-    /** Serial Version UID for serialization compatibility. */
     private static final long serialVersionUID = 1L;
 
-    /** The unique ID of the user in the database. */
+    /** The unique user ID. */
     private int id;
 
-    /** The unique username used for login. */
+    /** The username for login. */
     private String username;
 
-    /** The password used for login. */
+    /** The password for login. */
     private String password;
 
-    /** The type of the user (e.g., "Manager", "Waiter", "Customer"). */
+    /** The role of the user (e.g., "Manager", "Waiter"). */
     private String userType; 
 
-    /** The first name of the user. */
+    /** The first name. */
     private String firstName;
 
-    /** The last name of the user. */
+    /** The last name. */
     private String lastName;
 
-    /** Indicates whether the user is currently logged in. */
+    /** Login status flag. */
     private boolean isLoggedIn;
 
     /**
      * Constructs a new User object.
      *
-     * @param id the user's ID
-     * @param username the user's username
-     * @param password the user's password
-     * @param userType the role/type of the user
-     * @param firstName the user's first name
-     * @param lastName the user's last name
+     * @param id the user ID
+     * @param username the username
+     * @param password the password
+     * @param userType the role
+     * @param firstName the first name
+     * @param lastName the last name
      */
     public User(int id, String username, String password, String userType, String firstName, String lastName) {
         this.id = id;
@@ -58,40 +56,27 @@ public class User implements Serializable {
     
     // --- Getters and Setters ---
 
-    /**
-     * Gets the username.
-     * @return the username string
-     */
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
     public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    /**
-     * Gets the password.
-     * @return the password string
-     */
     public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    /**
-     * Gets the user type/role.
-     * @return the user type string
-     */
     public String getUserType() { return userType; }
+    public void setUserType(String userType) { this.userType = userType; }
 
-    /**
-     * Checks if the user is currently logged in.
-     * @return true if logged in, false otherwise
-     */
     public boolean isLoggedIn() { return isLoggedIn; }
-
-    /**
-     * Sets the login status of the user.
-     * @param isLoggedIn the new login status
-     */
     public void setLoggedIn(boolean isLoggedIn) { this.isLoggedIn = isLoggedIn; }
     
-    /**
-     * Returns a string representation of the User.
-     * @return full name and user type
-     */
     @Override
     public String toString() {
         return firstName + " " + lastName + " (" + userType + ")";

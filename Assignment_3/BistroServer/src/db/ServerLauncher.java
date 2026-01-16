@@ -1,17 +1,18 @@
 package db;
+
 /**
- * A utility class that serves as the entry point for the application JAR.
- * This class acts as a wrapper around the main JavaFX application.
- * It is required to bypass JavaFX runtime module restrictions when running the application
- * as a standalone JAR file without explicit VM arguments.
- 
+ * A launcher class designed to bypass JavaFX runtime module restrictions.
+ * This class serves as the entry point when running the application as a standalone JAR file.
+ * It delegates execution to the main JavaFX class, ServerUI.
+ * * @author Group-17
+ * @version 1.0
  */
 public class ServerLauncher {
     
     /**
-     * The main method for execution to the JavaFX application.
+     * The main entry point for the JAR execution.
      *
-     * @param args the arguments
+     * @param args command line arguments passed to the application
      */
     public static void main(String[] args) {
         ServerUI.main(args);

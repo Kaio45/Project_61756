@@ -3,17 +3,17 @@ package common;
 import java.io.Serializable;
 
 /**
- * The Class Table.
- * Represents a physical table in the restaurant.
- * Implements Serializable to allow network transmission.
+ * Represents a physical dining table in the restaurant.
+ * @author Group-17
+ * @version 1.0
  */
 public class Table implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    /** The unique ID of the table (e.g., 1, 2, 3). */
+    /** The unique ID of the table. */
     private int tableId;
     
-    /** The number of seats available at this table. */
+    /** The number of seats at this table. */
     private int seats;
     
     /**

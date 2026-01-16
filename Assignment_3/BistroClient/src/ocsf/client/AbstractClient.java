@@ -2,23 +2,39 @@ package ocsf.client;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 /**
  * The AbstractClient class contains all the methods necessary to set up
  * the client side of a client-server architecture. When a client is thus
  * connected to the server, the two programs can identify each other and
  * exchange messages.
+ * <p>
+ * Concrete subclasses must implement the {@link #handleMessageFromServer} method.
+ * </p>
+ * @author Group-17
+ * @version 1.0
  */
 public abstract class AbstractClient implements Runnable {
   
-  // Instance variables
+  /** The socket connecting to the server. */
   private Socket clientSocket;
+  
+  /** The stream used to write to the server. */
   private ObjectOutputStream output;
+  
+  /** The stream used to read from the server. */
   private ObjectInputStream input;
+  
+  /** The thread that waits for messages from the server. */
   private Thread clientReader;
+  
+  /** Indicates if the client is ready to stop. */
   private boolean readyToStop = false;
+  
+  /** The server's host name. */
   private String host;
+  
+  /** The port number. */
   private int port;
 
   /**
@@ -46,7 +62,7 @@ public abstract class AbstractClient implements Runnable {
       input = new ObjectInputStream(clientSocket.getInputStream());
       clientReader = new Thread(this);
       readyToStop = false;
-      clientReader.start(); // Starts the thread that waits for messages
+      clientReader.start(); 
     } catch (IOException exception) {
       connectionException(exception);
       throw exception;
@@ -78,8 +94,14 @@ public abstract class AbstractClient implements Runnable {
     closeAll();
   }
 
-  // Accessors
+  // --- Accessors ---
+  
+  /**
+   * Checks if the client is connected.
+   * @return true if connected, false otherwise.
+   */
   public boolean isConnected() { return clientReader != null && clientReader.isAlive(); }
+  
   public int getPort() { return port; }
   public void setPort(int port) { this.port = port; }
   public String getHost() { return host; }
@@ -96,7 +118,7 @@ public abstract class AbstractClient implements Runnable {
     try {
       while (!readyToStop) {
         try {
-          msg = input.readObject(); // Waits for a message
+          msg = input.readObject();
           handleMessageFromServer(msg);
         } catch (ClassNotFoundException ex) {
           connectionException(ex);
@@ -114,9 +136,21 @@ public abstract class AbstractClient implements Runnable {
     }
   }
 
-  // Methods to be overridden by the concrete client
+  /**
+   * Hook method called after the connection has been closed.
+   */
   protected void connectionClosed() {}
+  
+  /**
+   * Hook method called each time an exception is thrown by the client's
+   * thread that is waiting for messages from the server.
+   * * @param exception the exception raised.
+   */
   protected void connectionException(Exception exception) {}
+  
+  /**
+   * Hook method called after a connection has been established.
+   */
   protected void connectionEstablished() {}
   
   /**
@@ -129,6 +163,8 @@ public abstract class AbstractClient implements Runnable {
 
   /**
    * Closes all aspects of the connection to the server.
+   *
+   * @throws IOException if an I/O error occurs.
    */
   private void closeAll() throws IOException {
     try {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2D3447;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.HistoryController">
+   <children>
+      <Label layoutX="24.0" layoutY="24.0" text="Order History" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      
+      <TableView fx:id="historyTable" layoutX="24.0" layoutY="70.0" prefHeight="260.0" prefWidth="550.0">
+        <columns>
+          <TableColumn fx:id="colId" prefWidth="75.0" text="Order ID" />
+          <TableColumn fx:id="colDate" prefWidth="100.0" text="Date" />
+          <TableColumn fx:id="colTime" prefWidth="75.0" text="Time" />
+          <TableColumn fx:id="colGuests" prefWidth="75.0" text="Guests" />
+          <TableColumn fx:id="colStatus" prefWidth="150.0" text="Status" />
+        </columns>
+      </TableView>
+      
+      <Button layoutX="250.0" layoutY="345.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #e96767; -fx-text-fill: white; -fx-font-weight: bold;" text="Close" />
+   </children>
+</AnchorPane>

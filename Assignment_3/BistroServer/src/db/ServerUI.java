@@ -7,29 +7,30 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * The Class ServerUI.
- * This class serves as the main entry point for the Server application.
- * It launches the JavaFX user interface and starts the server listening thread.
+ * The entry point for the Server's Graphical User Interface (GUI).
+ * This class extends Application and is responsible for loading the FXML layout,
+ * initializing the main controller, and starting the server logic in a background thread.
+ * * @author Group-17
+ * @version 1.0
  */
 public class ServerUI extends Application {
 
     /**
-     * The main method.
-     * Launches the JavaFX application.
+     * The main method that launches the JavaFX application.
      *
-     * @param args the arguments
+     * @param args command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
 
     /**
-     * Start.
-     * Initializes the primary stage, loads the FXML interface, links the
-     * controller to the server logic, and starts the server connection listener.
+     * Starts the primary stage of the application.
+     * Loads the 'ServerPortFrame.fxml' file, sets up the scene, and initializes
+     * the server connection logic.
      *
-     * @param primaryStage the primary stage for this application
-     * @throws Exception if an error occurs during FXML loading
+     * @param primaryStage the primary window of the application
+     * @throws Exception if an error occurs during FXML loading or server startup
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -37,11 +38,11 @@ public class ServerUI extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/db/ServerPortFrame.fxml"));
         Parent root = loader.load();
         
-        // Get the controller and set it in EchoServer static reference
+        // Get the controller and link it to EchoServer
         ServerPortFrameController controller = loader.getController();
         EchoServer.serverController = controller;
         
-        // Start the server in a background thread to avoid freezing the UI
+        // Start the server logic in a separate thread to prevent UI freezing
         runServer();
 
         Scene scene = new Scene(root);
@@ -51,9 +52,9 @@ public class ServerUI extends Application {
     }
     
     /**
-     * Starts the EchoServer.
-     * Creates a new thread to run the server listening loop, ensuring the
-     * JavaFX Application Thread remains responsive.
+     * Initializes and starts the EchoServer instance.
+     * Runs on a separate thread to ensure the GUI remains responsive.
+     * Listens on the default port (5555).
      */
     private void runServer() {
         Thread serverThread = new Thread(() -> {

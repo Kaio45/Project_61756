@@ -7,11 +7,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * The main entry point for the Client side of the Restaurant Order Management system.
- * <p>
+ * The main entry point for the Client side of the Bistro application.
  * This class extends the JavaFX Application class. It establishes the initial
- * connection to the server and loads the Login Screen.
- * </p>
+ * connection logic and loads the Connection Screen.
+ * @author Group-17
+ * @version 1.0
  */
 public class ClientUI extends Application {
 
@@ -29,13 +29,18 @@ public class ClientUI extends Application {
         launch(args); 
     }
 
+    /**
+     * Starts the primary stage of the client application.
+     * Loads the 'ConnectFrame.fxml' file to allow the user to enter server details.
+     *
+     * @param primaryStage the primary stage for this application
+     * @throws Exception if an error occurs during FXML loading
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Step 1: The ChatClient creation is removed from here.
-        // It will be initialized only when the user clicks "Connect" in the ConnectFrame.
-
-        // Step 2: Load the Connect Frame FXML (instead of LoginFrame)
-        // Ensure the path matches your actual file name
+        // Step 1: The ChatClient creation is handled in ConnectFrameController.
+        
+        // Step 2: Load the Connect Frame FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/ConnectFrame.fxml"));
         Parent root = loader.load();
 

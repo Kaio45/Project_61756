@@ -75,8 +75,7 @@
 
 /* Bottom buttons sizing */
 #dailyReportBtn, #viewWaitingListBtn, #manageBtn, #reportBtn, #editProfileBtn, #logoutBtn {
-    -fx-min-width: USE_PREF_SIZE;
-}
+-fx-min-width: -1;}
 
 /* Hover and Focus effects */
 
@@ -281,3 +280,4 @@
 .chart-pie-label-line {
     -fx-stroke: #ecf0f1;
 }
+

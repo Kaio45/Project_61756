@@ -1,0 +1,321 @@
+/* style.css - הגרסה המאוזנת (Royal Blue Balanced) */
+
+.root {
+    -fx-background-color: #2c3e50;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* כותרות */
+.label-header {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ecf0f1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 0);
+}
+
+.label-subheader {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.label-text {
+    -fx-text-fill: #bdc3c7;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.label-error {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-weight: bold;
+}
+
+/* --- הגדרות כלליות (Login/Connect וכו') --- */
+.text-field, .password-field, .date-picker, .combo-box {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2c3e50;
+    -fx-prompt-text-fill: #95a5a6;
+    
+    /* גודל סטנדרטי יפה (לא קטן מדי) */
+    -fx-pref-height: 35px; 
+    -fx-font-size: 13px;
+    
+    -fx-background-radius: 15;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 15;
+    -fx-padding: 0 10;
+}
+
+.button {
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+    -fx-pref-height: 35px;
+    -fx-padding: 0 20px; /* ריפוד לצדדים כדי שטקסט לא ייחתך */
+}
+
+/* ============================================================ */
+/* >>> התאמות למסך הראשי (OrderFrame) <<< */
+/* ============================================================ */
+
+/* שדות בטופס - רחבים ויפים */
+#nameTextField, #datePicker, #timeComboBox, #guestsTextField, #statusTextField {
+    -fx-pref-width: 240px; 
+}
+
+/* שדה ID */
+#idTextField {
+    -fx-pref-width: 150px; 
+}
+
+/* כפתורי הפעולה הגדולים באמצע */
+#saveBtn, #updateBtn, #deleteBtn, #waitingListBtn {
+    -fx-font-size: 14px;
+    -fx-min-width: 120px; /* כפתורים רחבים */
+}
+
+/* כפתורים למטה - מבטיח שרואים את כל הטקסט */
+#dailyReportBtn, #viewWaitingListBtn, #manageBtn, #reportBtn, #editProfileBtn, #logoutBtn {
+    -fx-min-width: USE_PREF_SIZE;
+}
+
+/* ============================================================ */
+
+.text-field:focused, .password-field:focused, .date-picker:focused, .combo-box:focused {
+    -fx-border-color: #f1c40f;
+    -fx-background-color: #ffffff;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button:pressed {
+    -fx-translate-y: 1;
+}
+
+/* colors */
+.btn-primary { -fx-background-color: #3BC1A8; } 
+.btn-success { -fx-background-color: #3BC1A8; } 
+.btn-danger  { -fx-background-color: #e83155; } 
+.btn-warning { -fx-background-color: #8A244B; } 
+.btn-info    { -fx-background-color: #629FAD; } 
+.btn-dark    { -fx-background-color: #296374; } 
+
+/* tables */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-base: #2c3e50;
+    -fx-control-inner-background: #2c3e50;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #34495e;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #f1c40f;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent #34495e transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #304357;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER;
+}
+/* --- עיצוב תיבת ההודעות (הלייבל למטה) --- */
+/* --- עיצוב תיבת ההודעות (לבן נקי) --- */
+#messageLabel {
+    -fx-border-color: #ffffff;       /* מסגרת לבנה */
+    -fx-text-fill: #ffffff;          /* טקסט לבן */
+    
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    
+    -fx-background-color: rgba(0, 0, 0, 0.2); /* רקע כהה עדין כדי שהלבן יבלוט */
+    -fx-background-radius: 15px;
+    
+    -fx-padding: 5px;
+    -fx-alignment: CENTER;
+}
+/* --- עיצוב TabPane קומפקטי ואסתטי --- */
+/* --- עיצוב TabPane (מודרני, נקי ותואם לפונטים) --- */
+/* --- עיצוב TabPane שטוח, חד וקומפקטי (Flat & Sharp) --- */
+/* --- עיצוב TabPane "קפסולה" (קצוות עגולים בלבד) --- */
+/* --- עיצוב TabPane "קפסולה" מתוקן (כולל ביטול פוקוס) --- */
+/* --- עיצוב TabPane "קפסולה" משוריין (Force Radius) --- */
+
+/* 1. איפוס מוחלט של פוקוס ורקעים */
+.tab-pane, .tab-header-area, .tab-header-background, .tab {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 10; 
+}
+
+/* 2. הגדרה כללית לכל הטאבים (מרובעים כברירת מחדל) */
+.tab {
+    -fx-background-color: #2c3e50; 
+    -fx-background-radius: 0;      
+    -fx-padding: 4 12;             
+    -fx-border-width: 0;
+}
+
+/* 3. טאב ראשון - עגול משמאל (בכל מצב!) */
+/* אנחנו מגדירים את זה גם לרגיל, גם למסומן (selected) וגם לפוקוס */
+.tab:first-child, 
+.tab:selected:first-child, 
+.tab:focused:first-child {
+    -fx-background-radius: 10 0 0 0; 
+}
+
+/* 4. טאב אחרון - עגול מימין (בכל מצב!) */
+.tab:last-child, 
+.tab:selected:last-child, 
+.tab:focused:last-child {
+    -fx-background-radius: 0 10 0 0; 
+}
+
+/* 5. טאב במעבר עכבר */
+.tab:hover {
+    -fx-background-color: #34495e; 
+    -fx-cursor: hand;
+}
+
+/* 6. צבע רקע לטאב שנבחר */
+.tab:selected {
+    -fx-background-color: #ffffff;
+}
+
+/* 7. טקסט */
+.tab-label {
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: #bdc3c7;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #2c3e50; 
+}
+
+/* 8. אזור התוכן הלבן */
+.tab-content-area {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 10 10; 
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 0, 0);
+    -fx-padding: 15;
+}
+
+/* 8. טקסט */
+.tab-label {
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: #bdc3c7;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #2c3e50; 
+}
+
+/* 9. אזור התוכן */
+.tab-content-area {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 10 10; 
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 0, 0);
+    -fx-padding: 15;
+}
+/* --- עיצוב דוחות וגרפים (Manager Dashboard) --- */
+/* --- עיצוב דוחות וגרפים (Manager Dashboard) - מתוקן --- */
+
+/* 1. הגדרות כלליות לטקסט בגרף */
+.chart {
+    -fx-padding: 10px;
+}
+/* --- תיקון סופי לגרפים (Manager Dashboard) --- */
+
+/* 1. החזרת הרקע הלבן לאזור הגרף עצמו (מאחורי העמודות) */
+.chart-plot-background {
+    -fx-background-color: #ffffff;
+}
+
+/* 2. תיקון הכיתובים "Customers" ו-"Hour" ושאר המספרים */
+.axis {
+    /* זה הפקודה שצובעת את הכותרות (Hour/Customers) בלבן */
+    -fx-label-fill: #ffffff; 
+    
+    /* זה צובע את המספרים (12:00, 14:00...) בלבן/אפור בהיר */
+    -fx-tick-label-fill: #ecf0f1; 
+    
+    -fx-font-family: "Segoe UI";
+    -fx-tick-label-font-size: 11px;
+}
+
+/* חיזוק נוסף: אם הכותרת היא לייבל נפרד, נכריח אותה להיות לבנה */
+.axis .label {
+    -fx-text-fill: #ffffff;
+}
+
+/* 3. קווי רשת בתוך הגרף הלבן (שיהיו אפורים עדינים) */
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: #bdc3c7;
+}
+
+/* 4. המקרא (Legend) - Arrived / Left */
+/* מבטל את הרקע הלבן הגדול ומשאיר רק טקסט נקי */
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #ffffff; /* טקסט המקרא בלבן */
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.chart-legend-item-symbol {
+    -fx-background-radius: 2px;
+}
+
+/* 5. כותרת ראשית של הגרף */
+.chart-title {
+    -fx-text-fill: #f1c40f; 
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* 6. טקסטים בגרף עוגה */
+.chart-pie-label {
+    -fx-fill: #ecf0f1;
+}
+.chart-pie-label-line {
+    -fx-stroke: #ecf0f1;
+}}

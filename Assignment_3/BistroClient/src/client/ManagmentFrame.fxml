@@ -1,38 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="400.0" prefWidth="500.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ManagementController">
+<AnchorPane fx:id="d" prefHeight="713.0" prefWidth="617.0" style="-fx-background-color: #2c3e50;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.OrderFrameController">
    <children>
-      <Label layoutX="100.0" layoutY="25.0" styleClass="label-header" text="Restaurant Management" />
+   
+      <Label layoutX="173.0" layoutY="31.0" styleClass="label-header" text="Order Management" />
+
+      <Button fx:id="registerBtn" layoutX="454.0" layoutY="30.0" mnemonicParsing="false" onAction="#openRegister" styleClass="btn-info" text="Register Client" />
+
+      <GridPane hgap="15.0" layoutX="65.0" layoutY="97.0" vgap="20.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="240.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="label-subheader" text="Order ID:" />
+            <TextField fx:id="idTextField" promptText="Enter ID" GridPane.columnIndex="1" />
+            <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#searchOrder" prefWidth="103.0" styleClass="btn-primary" text="Search" GridPane.columnIndex="2" />
+            
+            <Label fx:id="nameLabel" styleClass="label-text" text="Name:" GridPane.rowIndex="1" />
+            <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="myOrderBtn" mnemonicParsing="false" onAction="#loadMyOrder" prefWidth="107.0" styleClass="btn-info" text="My Orders" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            
+            <Label styleClass="label-text" text="Date:" GridPane.rowIndex="2" />
+            <DatePicker fx:id="datePicker" prefWidth="239.0" promptText="Select Date" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            
+            <Label styleClass="label-text" text="Time:" GridPane.rowIndex="3" />
+            <ComboBox fx:id="timeComboBox" promptText="Select Time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="clientHistoryBtn" mnemonicParsing="false" onAction="#viewClientHistory" prefWidth="109.0" styleClass="btn-info" text="History" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            
+            <Label styleClass="label-text" text="Guests:" GridPane.rowIndex="4" />
+            <TextField fx:id="guestsTextField" promptText="Number of guests" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            
+            <Label styleClass="label-subheader" text="Status:" GridPane.rowIndex="5" />
+            <TextField fx:id="statusTextField" editable="false" style="-fx-background-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            
+            <Button fx:id="arrivedBtn" mnemonicParsing="false" onAction="#markArrived" prefWidth="121.0" styleClass="btn-primary" text="Arrived" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="finishedBtn" mnemonicParsing="false" onAction="#markFinished" prefWidth="116.0" styleClass="btn-dark" text="Finished" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="smartCheckInBtn" mnemonicParsing="false" onAction="#smartCheckIn" prefWidth="119.0" styleClass="btn-success" text="Daily Orders" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+
+      <Button fx:id="saveBtn" layoutX="173.0" layoutY="421.0" mnemonicParsing="false" onAction="#saveOrder" styleClass="btn-success" text="Order Now" />
+      <Button fx:id="updateBtn" layoutX="303.0" layoutY="421.0" mnemonicParsing="false" onAction="#updateOrder" styleClass="btn-warning" text="Update" />
+      <Button fx:id="deleteBtn" layoutX="432.0" layoutY="421.0" minWidth="74.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="66.0" prefWidth="120.0" styleClass="btn-danger" text="Delete" visible="false" />
       
-      <Label layoutX="33.0" layoutY="80.0" styleClass="label-subheader" text="Manage Tables" />
+      <Button fx:id="waitingListBtn" layoutX="173.0" layoutY="471.0" mnemonicParsing="false" onAction="#enterWaitingList" prefWidth="249.0" styleClass="btn-danger" text="Enter Waiting List" visible="false" />
+
+      <Label fx:id="messageLabel" alignment="CENTER" layoutX="35.0" layoutY="515.0" prefHeight="66.0" prefWidth="552.0" style="-fx-font-size: 16px;" textFill="#f1c40f" />
+
+      <Button fx:id="logoutBtn" layoutX="24.0" layoutY="604.0" mnemonicParsing="false" onAction="#logout" prefWidth="103.0" styleClass="btn-dark" text="Log Out" />
       
-      <TextField fx:id="tableIdTxt" layoutX="30.0" layoutY="115.0" prefWidth="80.0" promptText="Table ID" />
-      <TextField fx:id="seatsTxt" layoutX="116.0" layoutY="115.0" prefWidth="74.0" promptText="Seats" />
+      <Button fx:id="dailyReportBtn" layoutX="268.0" layoutY="604.0" mnemonicParsing="false" onAction="#getDailyOrders" prefWidth="129.0" styleClass="btn-primary" text="Daily Report" />
+      <Button fx:id="viewWaitingListBtn" layoutX="140.0" layoutY="604.0" mnemonicParsing="false" onAction="#getWaitingList" prefWidth="120.0" styleClass="btn-warning" text="Waiting List" />
       
-      <Button layoutX="199.0" layoutY="115.0" mnemonicParsing="false" onAction="#addTable" prefWidth="80.0" styleClass="btn-success" text="Add" />
-      <Button layoutX="285.0" layoutY="115.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="91.0" styleClass="btn-warning" text="Update" />
-      <Button layoutX="380.0" layoutY="115.0" mnemonicParsing="false" onAction="#deleteTable" styleClass="btn-danger" text="Delete" />
-      
-      <Separator layoutX="30.0" layoutY="170.0" prefWidth="440.0" />
-      
-      <Label layoutX="30.0" layoutY="190.0" styleClass="label-subheader" text="Opening Hours &amp; Holidays" />
-      
-      <Label layoutX="30.0" layoutY="225.0" styleClass="label-text" text="Date / Day:" />
-      <TextField fx:id="dayDateTxt" layoutX="120.0" layoutY="220.0" prefWidth="180.0" promptText="e.g. Sunday or 2026-05-01" />
-      
-      <Label layoutX="30.0" layoutY="265.0" styleClass="label-text" text="Hours:" />
-      <TextField fx:id="hoursTxt" layoutX="120.0" layoutY="260.0" prefWidth="180.0" promptText="e.g. 12:00-23:00" />
-      
-      <Button layoutX="320.0" layoutY="260.0" mnemonicParsing="false" onAction="#updateHours" prefWidth="100.0" styleClass="btn-primary" text="Set Hours" />
-      
-      <Label fx:id="msgLabel" alignment="CENTER" layoutX="50.0" layoutY="320.0" prefWidth="400.0" styleClass="label-text" />
-      
-      <Button layoutX="200.0" layoutY="350.0" mnemonicParsing="false" onAction="#close" prefWidth="100.0" styleClass="btn-danger" text="Close" />
+      <Button fx:id="manageBtn" layoutX="407.0" layoutY="604.0" mnemonicParsing="false" onAction="#openManagement" prefWidth="94.0" styleClass="btn-dark" text="Manage" visible="false" />
+      <Button fx:id="reportBtn" layoutX="511.0" layoutY="604.0" mnemonicParsing="false" onAction="#openReports" styleClass="btn-warning" text="Reports" visible="false" />
+      <Button fx:id="editProfileBtn" layoutX="454.0" layoutY="30.0" mnemonicParsing="false" onAction="#openEditProfile" prefWidth="129.0" styleClass="btn-info" text="Edit Info" visible="false" />
+
+      <Button layoutX="14.0" layoutY="663.0" mnemonicParsing="false" onAction="#disconnectBtn" prefHeight="19.0" prefWidth="65.0" styleClass="btn-danger" text="Exit" />
+      <Button fx:id="searchClientBtn" layoutX="22.0" layoutY="30.0" mnemonicParsing="false" onAction="#searchClientById" prefWidth="107.0" styleClass="btn-dark" text="Lookup ID" />
+
    </children>
 </AnchorPane>

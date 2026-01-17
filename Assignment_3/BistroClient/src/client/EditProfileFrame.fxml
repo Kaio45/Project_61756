@@ -4,29 +4,20 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="250.0" prefWidth="400.0" style="-fx-background-color: #34495e;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.EditProfileController">
+<AnchorPane prefHeight="280.0" prefWidth="400.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.EditProfileController">
    <children>
-      <Label layoutX="116.0" layoutY="25.0" text="Edit My Details" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="22.0" />
-         </font>
-      </Label>
+      <Label layoutX="110.0" layoutY="20.0" styleClass="label-header" text="Edit My Details" />
       
-      <Label layoutX="40.0" layoutY="85.0" text="Phone:" textFill="WHITE">
-         <font> <Font size="14.0" /> </font>
-      </Label>
-      <TextField fx:id="phoneTxt" layoutX="120.0" layoutY="80.0" prefWidth="200.0" />
+      <Label layoutX="40.0" layoutY="85.0" styleClass="label-text" text="Phone:" />
+      <TextField fx:id="phoneTxt" layoutX="120.0" layoutY="80.0" prefWidth="220.0" />
       
-      <Label layoutX="40.0" layoutY="135.0" text="Email:" textFill="WHITE">
-         <font> <Font size="14.0" /> </font>
-      </Label>
-      <TextField fx:id="emailTxt" layoutX="120.0" layoutY="130.0" prefWidth="200.0" />
+      <Label layoutX="40.0" layoutY="135.0" styleClass="label-text" text="Email:" />
+      <TextField fx:id="emailTxt" layoutX="120.0" layoutY="130.0" prefWidth="220.0" />
       
-      <Button layoutX="120.0" layoutY="180.0" mnemonicParsing="false" onAction="#saveChanges" prefWidth="90.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Save" />
-      <Button layoutX="230.0" layoutY="180.0" mnemonicParsing="false" onAction="#closeWindow" prefWidth="90.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Cancel" />
+      <Button layoutX="120.0" layoutY="190.0" mnemonicParsing="false" onAction="#saveChanges" prefWidth="100.0" styleClass="btn-success" text="Save" />
+      <Button layoutX="240.0" layoutY="190.0" mnemonicParsing="false" onAction="#closeWindow" prefWidth="100.0" styleClass="btn-danger" text="Cancel" />
       
-      <Label fx:id="msgLabel" alignment="CENTER" layoutX="50.0" layoutY="215.0" prefWidth="300.0" textFill="#f1c40f" />
+      <Label fx:id="msgLabel" alignment="CENTER" layoutX="50.0" layoutY="230.0" prefWidth="300.0" styleClass="label-subheader" />
    </children>
 </AnchorPane>

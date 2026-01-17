@@ -440,7 +440,7 @@ public class OrderFrameController {
 	        if (currentStatus.equalsIgnoreCase("APPROVED")) {
 	            if (arrivedBtn != null) {
 	                arrivedBtn.setVisible(true);
-	                arrivedBtn.setText("Client Arrived");
+	                arrivedBtn.setText("Arrived");
 	            }
 	        } else if (currentStatus.equalsIgnoreCase("ACTIVE") || currentStatus.equalsIgnoreCase("ARRIVED")) {
 	            if (finishedBtn != null)
@@ -980,3 +980,4 @@ public class OrderFrameController {
 		alert.showAndWait();
 	}
 }
+

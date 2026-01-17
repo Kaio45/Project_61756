@@ -6,76 +6,78 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="d" prefHeight="650.0" prefWidth="600.0" style="-fx-background-color: #2c3e50;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.OrderFrameController">
+<AnchorPane fx:id="d" prefHeight="713.0" prefWidth="617.0" style="-fx-background-color: #2c3e50;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.OrderFrameController">
    <children>
-      <Label layoutX="160.0" layoutY="30.0" text="Order Management" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="28.0" />
-         </font>
-      </Label>
+   
+      <Label layoutX="173.0" layoutY="31.0" styleClass="label-header" text="Order Management" />
 
-      <Label layoutX="60.0" layoutY="100.0" text="Order ID:" textFill="WHITE">
-         <font> <Font name="System Bold" size="16.0" /> </font>
-      </Label>
-      <TextField fx:id="idTextField" layoutX="200.0" layoutY="95.0" prefHeight="35.0" prefWidth="180.0" promptText="Enter ID" style="-fx-background-radius: 10;" />
-      <Button fx:id="searchBtn" layoutX="390.0" layoutY="95.0" mnemonicParsing="false" onAction="#searchOrder" prefHeight="35.0" prefWidth="70.0" style="-fx-background-color: #5c9ded; -fx-text-fill: white; -fx-background-radius: 10;" text="Search" />
+      <Button fx:id="registerBtn" layoutX="454.0" layoutY="30.0" mnemonicParsing="false" onAction="#openRegister" styleClass="btn-info" text="Register Client" />
 
-      <Label layoutX="60.0" layoutY="160.0" text="Date:" textFill="WHITE">
-         <font> <Font name="System Bold" size="16.0" /> </font>
-      </Label>
-      <DatePicker fx:id="datePicker" layoutX="200.0" layoutY="167.0" prefHeight="35.0" prefWidth="260.0" promptText="Select Date" style="-fx-background-radius: 10;" />
+      <GridPane hgap="15.0" layoutX="65.0" layoutY="97.0" vgap="20.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="240.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="label-subheader" text="Order ID:" />
+            <TextField fx:id="idTextField" promptText="Enter ID" GridPane.columnIndex="1" />
+            <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#searchOrder" prefWidth="103.0" styleClass="btn-primary" text="Search" GridPane.columnIndex="2" />
+            
+            <Label fx:id="nameLabel" styleClass="label-text" text="Name:" GridPane.rowIndex="1" />
+            <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="myOrderBtn" mnemonicParsing="false" onAction="#loadMyOrder" prefWidth="107.0" styleClass="btn-info" text="My Orders" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            
+            <Label styleClass="label-text" text="Date:" GridPane.rowIndex="2" />
+            <DatePicker fx:id="datePicker" prefWidth="239.0" promptText="Select Date" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            
+            <Label styleClass="label-text" text="Time:" GridPane.rowIndex="3" />
+            <ComboBox fx:id="timeComboBox" promptText="Select Time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="clientHistoryBtn" mnemonicParsing="false" onAction="#viewClientHistory" prefWidth="109.0" styleClass="btn-info" text="History" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            
+            <Label styleClass="label-text" text="Guests:" GridPane.rowIndex="4" />
+            <TextField fx:id="guestsTextField" promptText="Number of guests" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            
+            <Label styleClass="label-subheader" text="Status:" GridPane.rowIndex="5" />
+            <TextField fx:id="statusTextField" editable="false" style="-fx-background-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            
+            <Button fx:id="arrivedBtn" mnemonicParsing="false" onAction="#markArrived" prefWidth="121.0" styleClass="btn-primary" text="Arrived" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="finishedBtn" mnemonicParsing="false" onAction="#markFinished" prefWidth="116.0" styleClass="btn-dark" text="Finished" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="smartCheckInBtn" mnemonicParsing="false" onAction="#smartCheckIn" prefWidth="119.0" styleClass="btn-success" text="Daily Orders" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
 
-      <Label layoutX="60.0" layoutY="220.0" text="Time:" textFill="WHITE">
-         <font> <Font name="System Bold" size="16.0" /> </font>
-      </Label>
-      <ComboBox fx:id="timeComboBox" layoutX="200.0" layoutY="215.0" prefHeight="35.0" prefWidth="260.0" promptText="Select Time" style="-fx-background-radius: 10; -fx-background-color: white;" />
-
-      <Label layoutX="60.0" layoutY="280.0" text="Guests:" textFill="WHITE">
-         <font> <Font name="System Bold" size="16.0" /> </font>
-      </Label>
-      <TextField fx:id="guestsTextField" layoutX="200.0" layoutY="275.0" prefHeight="35.0" prefWidth="260.0" promptText="2" style="-fx-background-radius: 10;" />
-
-      <Label layoutX="60.0" layoutY="340.0" text="Status:" textFill="#ffd700">
-         <font> <Font name="System Bold" size="16.0" /> </font>
-      </Label>
-      <TextField fx:id="statusTextField" editable="false" layoutX="200.0" layoutY="335.0" prefHeight="35.0" prefWidth="260.0" style="-fx-background-radius: 10; -fx-background-color: #bdc3c7;" />
-
-      <Button fx:id="saveBtn" layoutX="200.0" layoutY="400.0" mnemonicParsing="false" onAction="#saveOrder" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-weight: bold;" text="Order Now" />
-      <Button fx:id="updateBtn" layoutX="340.0" layoutY="400.0" mnemonicParsing="false" onAction="#updateOrder" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-weight: bold;" text="Update" />
-      <Button fx:id="deleteBtn" layoutX="470.0" layoutY="400.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-weight: bold;" text="Delete" visible="false" />
-
-      <Button fx:id="waitingListBtn" layoutX="200.0" layoutY="450.0" mnemonicParsing="false" onAction="#enterWaitingList" prefHeight="40.0" prefWidth="260.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 20;" text="Enter Waiting List" visible="false" />
-	<Button fx:id="dailyReportBtn" onAction="#getDailyOrders" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #4a90e2; -fx-text-fill: white;" text="Daily Report" />
-
-<Button fx:id="viewWaitingListBtn" layoutX="120.0" onAction="#getWaitingList" prefHeight="30.0" prefWidth="140.0" style="-fx-background-color: #f5a623; -fx-text-fill: white;" text="View Waiting List" />
-      <Button fx:id="arrivedBtn" layoutX="470.0" layoutY="335.0" mnemonicParsing="false" onAction="#markArrived" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold;" text="Client Arrived" visible="false" />
-      <Button fx:id="finishedBtn" layoutX="470.0" layoutY="335.0" mnemonicParsing="false" onAction="#markFinished" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #607D8B; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold;" text="Client Left" visible="false" />
-
-      <Button fx:id="myOrderBtn" layoutX="470.0" layoutY="95.0" mnemonicParsing="false" onAction="#loadMyOrder" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-background-radius: 10;" text="My Orders" visible="false" />
-
-      <Label fx:id="messageLabel" alignment="CENTER" layoutX="50.0" layoutY="560.0" prefHeight="55.0" prefWidth="500.0" textFill="WHITE">
-         <font> <Font size="14.0" /> </font>
-      </Label>
-
-      <Button fx:id="logoutBtn" layoutX="30.0" layoutY="500.0" mnemonicParsing="false" onAction="#logout" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-background-radius: 15;" text="&lt; Log Out" />
+      <Button fx:id="saveBtn" layoutX="173.0" layoutY="421.0" mnemonicParsing="false" onAction="#saveOrder" styleClass="btn-success" text="Order Now" />
+      <Button fx:id="updateBtn" layoutX="303.0" layoutY="421.0" mnemonicParsing="false" onAction="#updateOrder" styleClass="btn-warning" text="Update" />
+      <Button fx:id="deleteBtn" layoutX="432.0" layoutY="421.0" minWidth="74.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="66.0" prefWidth="120.0" styleClass="btn-danger" text="Delete" visible="false" />
       
-      <Button fx:id="reportBtn" layoutX="140.0" layoutY="500.0" mnemonicParsing="false" onAction="#openReports" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-background-radius: 15;" text="Reports 📊" visible="false" />
-      <Button fx:id="manageBtn" layoutX="240.0" layoutY="500.0" mnemonicParsing="false" onAction="#openManagement" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-background-radius: 15;" text="Manage Rest." visible="false" />
-      
-      <Button fx:id="registerBtn" layoutX="26.0" layoutY="50.0" mnemonicParsing="false" onAction="#openRegister" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-background-radius: 15;" text="Register Client" />
-      <Button layoutX="470.0" layoutY="500.0" mnemonicParsing="false" onAction="#disconnectBtn" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 15;" text="Exit App" />
+      <Button fx:id="waitingListBtn" layoutX="173.0" layoutY="471.0" mnemonicParsing="false" onAction="#enterWaitingList" prefWidth="249.0" styleClass="btn-danger" text="Enter Waiting List" visible="false" />
 
-      <Button fx:id="editProfileBtn" layoutX="17.0" layoutY="12.0" mnemonicParsing="false" onAction="#openEditProfile" prefHeight="35.0" prefWidth="139.0" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-background-radius: 10;" text="Edit Details" visible="false" />
-      <Button fx:id="clientHistoryBtn" layoutX="204.0" layoutY="67.0" mnemonicParsing="false" onAction="#viewClientHistory" text="view client history" visible="false" />
-      <Button fx:id="searchClientBtn" layoutX="319.0" layoutY="2.0" mnemonicParsing="false" onAction="#searchClientById" text="search cl" />
-      <Button fx:id="smartCheckInBtn" layoutX="259.0" layoutY="2.0" mnemonicParsing="false" onAction="#smartCheckIn" text="SmartCK" visible="false" />
-      <Label fx:id="nameLabel" layoutX="58.0" layoutY="134.0" text="Name:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font></Label>
-      <TextField fx:id="nameTextField" layoutX="200.0" layoutY="134.0" prefHeight="25.0" prefWidth="241.0" />
+      <Label fx:id="messageLabel" alignment="CENTER" layoutX="35.0" layoutY="515.0" prefHeight="66.0" prefWidth="552.0" style="-fx-font-size: 16px;" textFill="#f1c40f" />
+
+      <Button fx:id="logoutBtn" layoutX="24.0" layoutY="604.0" mnemonicParsing="false" onAction="#logout" prefWidth="103.0" styleClass="btn-dark" text="Log Out" />
+      
+      <Button fx:id="dailyReportBtn" layoutX="268.0" layoutY="604.0" mnemonicParsing="false" onAction="#getDailyOrders" prefWidth="129.0" styleClass="btn-primary" text="Daily Report" />
+      <Button fx:id="viewWaitingListBtn" layoutX="140.0" layoutY="604.0" mnemonicParsing="false" onAction="#getWaitingList" prefWidth="120.0" styleClass="btn-warning" text="Waiting List" />
+      
+      <Button fx:id="manageBtn" layoutX="407.0" layoutY="604.0" mnemonicParsing="false" onAction="#openManagement" prefWidth="94.0" styleClass="btn-dark" text="Manage" visible="false" />
+      <Button fx:id="reportBtn" layoutX="511.0" layoutY="604.0" mnemonicParsing="false" onAction="#openReports" styleClass="btn-warning" text="Reports" visible="false" />
+      <Button fx:id="editProfileBtn" layoutX="454.0" layoutY="30.0" mnemonicParsing="false" onAction="#openEditProfile" prefWidth="129.0" styleClass="btn-info" text="Edit Info" visible="false" />
+
+      <Button layoutX="14.0" layoutY="663.0" mnemonicParsing="false" onAction="#disconnectBtn" prefHeight="19.0" prefWidth="65.0" styleClass="btn-danger" text="Exit" />
+      <Button fx:id="searchClientBtn" layoutX="22.0" layoutY="30.0" mnemonicParsing="false" onAction="#searchClientById" prefWidth="107.0" styleClass="btn-dark" text="Lookup ID" />
 
    </children>
 </AnchorPane>
